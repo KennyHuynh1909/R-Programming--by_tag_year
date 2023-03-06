@@ -1,5 +1,5 @@
 ---
-title: "Final Exam - R Program"
+title: "The relative popularity of programming languages between 2008 and 2018" 
 author: "HUYNH DO MINH PHUONG"
 date: "2/28/2023"
 output: html_document
@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 
 # 1. Data on tags over time
 
@@ -22,7 +23,6 @@ We'll be working with a dataset with one observation for each tag in each year. 
 ```{r}
 # Load libraries
 library(tidyverse)
-library(lubridate) 
 ```
 
 ```{r}
@@ -35,6 +35,13 @@ by_tag_year <- read_csv("by_tag_year.csv")
 str(by_tag_year)
 ```
 
+<p style="color:blue"><i> The data has 40.518 rows and 4 columns corresponding to the following information:</i></p>
+<p style="color:blue"><i> - 'year' : 10 years from 2008 to 2018,</i></p>
+<p style="color:blue"><i> - 'tag': types of programming languages in the past 10 years,</i></p>
+<p style="color:blue"><i> - 'number' : the number of questions with tag during year,</i></p>
+<p style="color:blue"><i> - 'year_toal' : total number of questions on all programming topics in the year.
+</i></p>
+
 
 # 2. Now in fraction format
 
@@ -43,6 +50,7 @@ This data has one observation for each pair of a tag and a year, showing the num
 Rather than just the counts, we're probably interested in a percentage: the fraction of questions that year that have that tag. So let's add that to the table.
 
 ```{r}
+library(lubridate) # Load lubridate to Make dealing with dates
 # Add fraction column and convert num to date
 by_tag_year_fraction <- by_tag_year %>% 
   mutate(fraction = number/year_total) %>%
@@ -83,8 +91,10 @@ r_over_time %>%
   ggplot(aes(year,fraction)) + geom_line(colour = "blue") +
   labs(
     title = "CHANGE OF R PROGRAMMING LANGUAGE OVER TIME") +
-    theme(panel.background = element_rect(fill = "white") )
+    theme(panel.background = element_rect(fill = "GhostWhite") )
 ```
+
+<p style="color:blue"><i> Interest in the R programming language has been grown rapidly over the past 10 years of the ever-increasing number of questions on this topic.</i></p>
 
 
 # 5. How about dplyr and ggplot2?
@@ -111,11 +121,11 @@ selected_tags_over_time <- by_tag_year_fraction %>%
 selected_tags_over_time %>%
   ggplot(aes(year,fraction,color = tag)) + geom_line() +
   labs(
-    title = "CHANGE OF R, DPLYR AND GGPLOT2 OVER TIME") +
-    theme(panel.background = element_rect(fill = "white") )
+    title = "CHANGE OF R, DPLYR AND GGPLOT2 TAGS OVER TIME") +
+    theme(panel.background = element_rect(fill = "GhostWhite") )
 ```
 
-R has grown quite rapidly over the past decade while the dplyr and ggplot2 tags are increasing steadily as well.
+<p style="color:blue"><i> R has grown quite rapidly over the past decade while the dplyr and ggplot2 tags are increasing steadily as well.</i></p>
 
 
 # 6. What are the most asked-about tags?
@@ -161,11 +171,11 @@ by_highest_tag_subset
 by_highest_tag_subset %>% 
   ggplot(aes(year,fraction,color = tag)) + geom_line() +
   labs(
-    title = "CHANGE OF TOP 6 HIGHEST TAGS OVER TIME") +
-    theme(panel.background = element_rect(fill = "white") )
+    title = "TOP 6 HIGHEST TAGS OVER TIME") +
+    theme(panel.background = element_rect(fill = "GhostWhite") )
 ```
 
-python is the only asked tag that has steadily increased over the past decade, whereas c# is in a serious decline about number of questions. android, java and php rose sharply in the first 6 years and gradually decrease in the last 4 years, while javascript tended to reduce in the last 2 years after a strong increase from 2008.
+<p style="color:blue"><i> In the top 6 highest tags, python is the only asked tag that has steadily increased over the past decade, whereas c# is in a serious decline about number of questions. android, java and php rose sharply in the first 6 years and gradually decrease in the last 4 years, while javascript tended to reduce in the last 2 years after a strong increase from 2008.</i></p>
 
 
 # 8. Some more tags!
@@ -194,10 +204,10 @@ by_tag_subset %>%
   ggplot(aes(year,fraction,color = tag)) + geom_line() +
   labs(
     title = "CHANGE OF 3 BIG MOBILE OPERATING SYSTEMS OVER TIME") +
-    theme(panel.background = element_rect(fill = "white") )
+    theme(panel.background = element_rect(fill = "GhostWhite") )
 ```
 
-In the three main mobile operating systems (Android, iOS and Windows Phone), the Windows Phone tag has fewest question, whereas the two remaining tags have been increasing a fraction of questions pretty fast in the last decade.
+<p style="color:blue"><i> In the three main mobile operating systems (Android, iOS and Windows Phone), the Windows Phone tag has fewest question, whereas the two remaining tags have been increasing a fraction of questions pretty fast in the last decade.</i></p>
 
 
 # 9. How have top programming languages changed since 2014?
@@ -215,10 +225,11 @@ library(gcookbook) # Load gcookbook for the cabbage_exp data set
   ggplot(by_tag_top, aes(year, fraction, fill = tag)) +
   #geom_col() +
   geom_col(position = "fill") +
-  labs(title = "CHANGE OF HIGHEST TAGS SINCE 2014") 
+  labs(title = "CHANGE OF HIGHEST TAGS SINCE 2014") +
+    theme(panel.background = element_rect(fill = "GhostWhite") )
 ```
 
-The number of questions asked in 'html' and 'jquery' tags after the year 2016 was gone, it means that those languages are shrinking. In the contrast, javascript and python are the programming languages that increases rapidly.
+<p style="color:blue"><i> The number of questions asked in 'html' and 'jquery' tags after the year 2016 was gone, it means that those languages are shrinking. In the contrast, javascript and python are the programming languages that increases rapidly.</i></p>
 
 
 # 10. How has average fraction of tag changed since 2014?
@@ -254,8 +265,8 @@ ggplot(filter_top, aes(x = avg, y = reorder(tag, avg), col = tag)) +
 
 ```
 
-Since 2014, the popularity of languages like Javascript and Java are still the most, whereas
-the number of people using c# and html is shrinking.
+<p style="color:blue"><i> Since 2014, the popularity of languages like Javascript and Java are still the most, whereas
+the number of people using c# and html is shrinking.</i></p>
 
 
 
