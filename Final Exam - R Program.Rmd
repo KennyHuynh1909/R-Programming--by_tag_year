@@ -23,8 +23,6 @@ We'll be working with a dataset with one observation for each tag in each year. 
 ```{r}
 # Load libraries
 library(tidyverse)
-#library(tibble)
-library(stringr)
 ```
 
 ```{r}
@@ -174,7 +172,7 @@ by_highest_tag_subset
 by_highest_tag_subset %>% 
   ggplot(aes(year,fraction,color = tag)) + geom_line() +
   labs(
-    title = "TOP 6 HIGHEST TAGS OVER TIME") +
+    title = "TOP 6 HIGHEST TAGS OVER TIME", x = "Year", y = "Fraction") +
     theme(panel.background = element_rect(fill = "GhostWhite") ) +
   scale_x_continuous(breaks = 0:2100)
 ```
