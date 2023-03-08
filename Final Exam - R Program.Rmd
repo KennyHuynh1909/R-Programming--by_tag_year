@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 
-# 1. Data on tags over time
+## 1. Data on tags over time
 
 How can we tell what programming languages and technologies are used by the most people? How about what languages are growing and which are shrinking, so that we can tell which are most worth investing time in? 
 
@@ -23,6 +23,8 @@ We'll be working with a dataset with one observation for each tag in each year. 
 ```{r}
 # Load libraries
 library(tidyverse)
+#library(tibble)
+library(stringr)
 ```
 
 ```{r}
@@ -43,18 +45,18 @@ str(by_tag_year)
 </i></p>
 
 
-# 2. Now in fraction format
+## 2. Now in fraction format
 
 This data has one observation for each pair of a tag and a year, showing the number of questions asked in that tag in that year and the total number of questions asked in that year. For instance, there were 54 questions asked about the .htaccess tag in 2008, out of a total of 58390 questions in that year. 
 
 Rather than just the counts, we're probably interested in a percentage: the fraction of questions that year that have that tag. So let's add that to the table.
 
 ```{r}
-library(lubridate) # Load lubridate to Make dealing with dates
+library(lubridate) # Load lubridate to make dealing with dates
 # Add fraction column and convert num to date
 by_tag_year_fraction <- by_tag_year %>% 
-  mutate(fraction = number/year_total) %>%
-  mutate(year = make_date(year)) 
+  mutate(fraction = number/year_total)
+  #mutate(year = make_date(year)) 
 ```
 
 ```{r}
@@ -63,7 +65,7 @@ by_tag_year_fraction
 ```
 
 
-# 3. Has R been growing or shrinking?
+## 3. Has R been growing or shrinking?
 
 So far we've been learning and using the R programming language. Wouldn't we like to be sure it's a good investment for the future? Has it been keeping pace with other languages, or have people been switching out of it? 
 
@@ -81,7 +83,7 @@ r_over_time
 ```
 
 
-# 4. Visualizing change over time
+## 4. Visualizing change over time
 
 Rather than looking at the results in a table, we often want to create a visualization. Change over time is usually visualized with a line plot.
 
@@ -89,15 +91,15 @@ Rather than looking at the results in a table, we often want to create a visuali
 # Create a line plot of fraction over time
 r_over_time %>% 
   ggplot(aes(year,fraction)) + geom_line(colour = "blue") +
-  labs(
-    title = "CHANGE OF R PROGRAMMING LANGUAGE OVER TIME") +
-    theme(panel.background = element_rect(fill = "GhostWhite") )
+  labs(title = "CHANGE OF 'R' TAG OVER TIME", x = "Year", y = "Fraction") +
+      theme(panel.background = element_rect(fill = "GhostWhite") ) +
+  scale_x_continuous(breaks = 0:2100)
 ```
 
 <p style="color:blue"><i> Interest in the R programming language has been grown rapidly over the past 10 years of the ever-increasing number of questions on this topic.</i></p>
 
 
-# 5. How about dplyr and ggplot2?
+## 5. How about dplyr and ggplot2?
 
 Based on that graph, it looks like R has been growing pretty fast in the last decade. Good thing we're practicing it now! 
 
@@ -121,14 +123,15 @@ selected_tags_over_time <- by_tag_year_fraction %>%
 selected_tags_over_time %>%
   ggplot(aes(year,fraction,color = tag)) + geom_line() +
   labs(
-    title = "CHANGE OF R, DPLYR AND GGPLOT2 TAGS OVER TIME") +
-    theme(panel.background = element_rect(fill = "GhostWhite") )
+    title = "CHANGE OF R, DPLYR AND GGPLOT2 TAGS OVER TIME", x = "Year", y = "Fraction") +
+    theme(panel.background = element_rect(fill = "GhostWhite") ) +
+  scale_x_continuous(breaks = 0:2100)
 ```
 
-<p style="color:blue"><i> R has grown quite rapidly over the past decade while the dplyr and ggplot2 tags are increasing steadily as well.</i></p>
+<p style="color:blue"><i> R has grown quite rapidly over the last decade while later languages like dplyr and ggplot2 have a slight increase.</i></p>
 
 
-# 6. What are the most asked-about tags?
+## 6. What are the most asked-about tags?
 
 It's sure been fun to visualize and compare tags over time. The dplyr and ggplot2 tags may not have as many questions as R, but we can tell they're both growing quickly as well.
 
@@ -150,7 +153,7 @@ sorted_tags
 ```
 
 
-# 7. How have large programming languages changed over time?
+## 7. How have large programming languages changed over time?
 
 We've looked at selected tags like R, ggplot2, and dplyr, and seen that they're each growing. What tags might be shrinking? A good place to start is to plot the tags that we just saw that were the most-asked about of all time, including JavaScript, Java and C#.
 
@@ -172,13 +175,14 @@ by_highest_tag_subset %>%
   ggplot(aes(year,fraction,color = tag)) + geom_line() +
   labs(
     title = "TOP 6 HIGHEST TAGS OVER TIME") +
-    theme(panel.background = element_rect(fill = "GhostWhite") )
+    theme(panel.background = element_rect(fill = "GhostWhite") ) +
+  scale_x_continuous(breaks = 0:2100)
 ```
 
 <p style="color:blue"><i> In the top 6 highest tags, python is the only asked tag that has steadily increased over the past decade, whereas c# is in a serious decline about number of questions. android, java and php rose sharply in the first 6 years and gradually decrease in the last 4 years, while javascript tended to reduce in the last 2 years after a strong increase from 2008.</i></p>
 
 
-# 8. Some more tags!
+## 8. Some more tags!
 
 Wow, based on that graph we've seen a lot of changes in what programming languages are most asked about. C# gets fewer questions than it used to, and Python has grown quite impressively. 
 
@@ -203,19 +207,80 @@ by_tag_subset
 by_tag_subset %>% 
   ggplot(aes(year,fraction,color = tag)) + geom_line() +
   labs(
-    title = "CHANGE OF 3 BIG MOBILE OPERATING SYSTEMS OVER TIME") +
-    theme(panel.background = element_rect(fill = "GhostWhite") )
+    title = "CHANGE OF ANDROID, IOS, WINDOWS-PHONE OVER TIME", x = "Year", y = "Fraction") +
+    theme(panel.background = element_rect(fill = "GhostWhite") ) +
+  scale_x_continuous(breaks = 0:2100)
 ```
 
-<p style="color:blue"><i> In the three main mobile operating systems (Android, iOS and Windows Phone), the Windows Phone tag has fewest question, whereas the two remaining tags have been increasing a fraction of questions pretty fast in the last decade.</i></p>
+<p style="color:blue"><i> In the three main mobile operating systems (Android, iOS and Windows Phone), the Windows Phone tag has fewest question, whereas Android is the most popular language by fraction of questions increasing pretty fast in the last decade.</i></p>
 
 
-# 9. How have top programming languages changed since 2014?
+# BONUS
+
+## 9. Has 'R' been growing or shrinking?
+
+```{r}
+# Filter for R tags
+r_programming <- by_tag_year_fraction %>% 
+  filter(str_detect(tag, "^r\\b")) %>%
+  group_by(year) %>%
+  summarize(fraction_total = sum(fraction))
+```
+
+```{r}
+# Create a line plot of fraction over time
+r_programming %>% 
+  ggplot(aes(year,fraction_total)) + geom_line(colour = "blue") +
+  labs(
+    title = "CHANGE OF R PROGRAMMING LANGUAGE OVER TIME", x = "Year", y = "Fraction") +
+    theme(panel.background = element_rect(fill = "GhostWhite") ) +
+  scale_x_continuous(breaks = 0:2100)
+```
+
+
+## 10. How about three big mobile operating systems (Android, iOS, and Windows Phone)
+
+```{r}
+android <- by_tag_year_fraction %>% 
+  filter(str_detect(tag, "^android\\b")) %>%
+  group_by(year) %>%
+  summarize(android = sum(fraction))
+
+ios <- by_tag_year_fraction %>% 
+  filter(str_detect(tag, "^ios\\b")) %>%
+  group_by(year) %>%
+  summarize(ios = sum(fraction))
+
+winphone <- by_tag_year_fraction %>% 
+  filter(str_detect(tag, "^windows-phone\\b")) %>%
+  group_by(year) %>%
+  summarize(winphone = sum(fraction))
+
+android_ios <- merge(android, ios, by="year", sort =F, all.x= T)
+
+mobile_os <- merge(android_ios, winphone, by="year", sort=F, all.x=T) %>%
+  gather(tag, total_fraction, android:winphone)
+```
+
+```{r}
+# Plot tags over time on a line plot using color to represent tag
+mobile_os %>% 
+  ggplot(aes(year,total_fraction,color = tag)) + geom_line() +
+  labs(
+    title = "CHANGE OF 3 BIG MOBILE OPERATING SYSTEMS OVER TIME", x = "Year", y = "Fraction") +
+    theme(panel.background = element_rect(fill = "GhostWhite") ) +
+  scale_x_continuous(breaks = 0:2100)
+```
+
+<p style="color:blue"><i> There are no questions regarding the Windows Phone tag in 2009.</i></p>
+
+
+## 11. How have top programming languages changed since 2014?
 
 ```{r}
 # Filter for the tags since 2014 with fraction over 0.05
 by_tag_top <- by_tag_year_fraction %>% 
-  filter(year >= '2014-01-01', fraction > 0.05) %>%
+  filter(year >= 2014, fraction > 0.05) %>%
   arrange(desc(fraction))
 ```
 
@@ -225,23 +290,24 @@ library(gcookbook) # Load gcookbook for the cabbage_exp data set
   ggplot(by_tag_top, aes(year, fraction, fill = tag)) +
   #geom_col() +
   geom_col(position = "fill") +
-  labs(title = "CHANGE OF HIGHEST TAGS SINCE 2014") +
-    theme(panel.background = element_rect(fill = "GhostWhite") )
+  labs(title = "CHANGE OF HIGHEST TAGS SINCE 2014", x = "Year", y = "Fraction") +
+    theme(panel.background = element_rect(fill = "GhostWhite") ) +
+  scale_x_continuous(breaks = 0:2100)
 ```
 
 <p style="color:blue"><i> The number of questions asked in 'html' and 'jquery' tags after the year 2016 was gone, it means that those languages are shrinking. In the contrast, javascript and python are the programming languages that increases rapidly.</i></p>
 
 
-# 10. How has average fraction of tag changed since 2014?
+# 12. How has average fraction of tag changed since 2014?
 
 ```{r}
 # Filter for the tags since 2014 and count the tag
 filter_1 <- by_tag_year_fraction %>% 
-  filter(year >= '2014-01-01') %>%
+  filter(year >= 2014) %>%
   group_by(tag) 
 
 filter_2 <- by_tag_year_fraction %>% 
-  filter(year >= '2014-01-01') %>%
+  filter(year >= 2014) %>%
   count(tag)
 
 by_tag_year_filter <- merge(filter_1, filter_2, by="tag", sort=F, all.x=T)
@@ -261,16 +327,7 @@ ggplot(filter_top, aes(x = avg, y = reorder(tag, avg), col = tag)) +
   geom_point(size = 3) +  # Use a larger dot
   theme_classic () +
   theme(panel.grid.major.y = element_line(colour = "grey60", linetype = "dashed")) +
-  labs(title = "AVERAGE FRACTION BY TAGS SINCE 2014", x = "Average Fraction", y = "Tag")
-
+  labs(title = "AVERAGE FRACTION BY TAGS SINCE 2014", x = "Average Fraction", y = "Tag") 
 ```
 
-<p style="color:blue"><i> Since 2014, the popularity of languages like Javascript and Java are still the most, whereas
-the number of people using c# and html is shrinking.</i></p>
-
-
-
-
-
-
-
+<p style="color:blue"><i> Since 2014, the popularity of languages like Javascript and Java are still the most, whereas the number of people using c# and html is shrinking.</i></p>
